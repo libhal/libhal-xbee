@@ -1,13 +1,13 @@
-# libhal-__device__
+# libhal-xbee
 
-[![✅ Checks](https://github.com/libhal/libhal-__device__/actions/workflows/ci.yml/badge.svg)](https://github.com/libhal/libhal-__device__/actions/workflows/ci.yml)
-[![Coverage](https://libhal.github.io/libhal-__device__/coverage/coverage.svg)](https://libhal.github.io/libhal-__device__/coverage/)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b084e6d5962d49a9afcb275d62cd6586)](https://www.codacy.com/gh/libhal/libhal-__device__/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=libhal/libhal-__device__&amp;utm_campaign=Badge_Grade)
-[![GitHub stars](https://img.shields.io/github/stars/libhal/libhal-__device__.svg)](https://github.com/libhal/libhal-__device__/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/libhal/libhal-__device__.svg)](https://github.com/libhal/libhal-__device__/network)
-[![GitHub issues](https://img.shields.io/github/issues/libhal/libhal-__device__.svg)](https://github.com/libhal/libhal-__device__/issues)
+[![✅ Checks](https://github.com/libhal/libhal-xbee/actions/workflows/ci.yml/badge.svg)](https://github.com/libhal/libhal-xbee/actions/workflows/ci.yml)
+[![Coverage](https://libhal.github.io/libhal-xbee/coverage/coverage.svg)](https://libhal.github.io/libhal-xbee/coverage/)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b084e6d5962d49a9afcb275d62cd6586)](https://www.codacy.com/gh/libhal/libhal-xbee/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=libhal/libhal-xbee&amp;utm_campaign=Badge_Grade)
+[![GitHub stars](https://img.shields.io/github/stars/libhal/libhal-xbee.svg)](https://github.com/libhal/libhal-xbee/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/libhal/libhal-xbee.svg)](https://github.com/libhal/libhal-xbee/network)
+[![GitHub issues](https://img.shields.io/github/issues/libhal/libhal-xbee.svg)](https://github.com/libhal/libhal-xbee/issues)
 
-libhal compatible device library for the __device__ device.
+libhal compatible device library for the xbee device.
 
 ## Contributing
 
@@ -42,7 +42,7 @@ To make your own libhal library:
 
 ## About the libhal-device template
 
-The libhal-__device__ repository is a template for creating device libraries in
+The libhal-xbee repository is a template for creating device libraries in
 the libhal ecosystem. It provides a structured layout and a set of files to help
 you get started with creating your own device library.
 
@@ -81,7 +81,7 @@ the datasheet (and potentially mirrors of it) is an acceptable alternative.
 This directory contains demonstration applications showing how to use the device
 library. It includes:
 
-- `applications/__device__.cpp`: A sample application demonstrating usage of the
+- `applications/xbee.cpp`: A sample application demonstrating usage of the
   device library.
 - `hardware_map.hpp`: A header file defining the hardware map for the demo
   applications.
@@ -89,16 +89,16 @@ library. It includes:
 - `platforms/lpc4074.cpp` and `platforms/lpc4078.cpp`: Platform-specific
   implementations for the demo applications.
 
-## include/libhal-__device__
+## include/libhal-xbee
 
 This directory contains the header files for the device library. It currently
-includes `__device__.hpp`, which is a placeholder for the main header file of
+includes `xbee.hpp`, which is a placeholder for the main header file of
 your device library.
 
 ## src
 
 This directory contains the source files for the device library. It currently
-includes `__device__.cpp`, which is a placeholder for the main source file of
+includes `xbee.cpp`, which is a placeholder for the main source file of
 your device library.
 
 ## test_package
@@ -111,8 +111,8 @@ Conan recipe is working correctly.
 
 This directory contains tests for the device library. It includes:
 
-- `__device__.test.cpp`: A placeholder for tests for the device library.
+- `xbee.test.cpp`: A placeholder for tests for the device library.
 - `main.test.cpp`: The main entry point for the tests.
 
-Remember to replace all instances of `__device__` with the actual name of the
+Remember to replace all instances of `xbee` with the actual name of the
 device that your library is being built for.

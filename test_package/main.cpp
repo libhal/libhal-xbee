@@ -19,11 +19,11 @@
 #include <cstdlib>
 #include <exception>
 
-#include <libhal-__device__/__device__.hpp>
+#include <libhal-xbee/xbee.hpp>
 
 int main()
 {
-  hal::__device__::__device___replace_me bar;
+  hal::xbee::xbee_replace_me bar;
 }
 
 namespace boost {

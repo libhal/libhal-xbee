@@ -14,7 +14,27 @@
 
 #pragma once
 
+#include <array>
+#include <cstdint>
+#include <string_view>
+
+#include <libhal/functional.hpp>
+#include <libhal/serial.hpp>
+
 namespace hal::xbee {
-class xbee_replace_me
-{};
+class xbee_radio
+{
+public:
+  [[nodiscard]] static result<xbee_radio> create(hal::serial& p_serial);
+
+  hal::result<std::span<hal::byte>> read();
+
+  hal::result<serial::write_t> write(std::span<const hal::byte> p_data);
+
+private:
+  xbee_radio(hal::serial& p_serial);
+  hal::serial* m_serial;
+  std::array<hal::byte, 256> m_xbee_buffer;
+};
+
 }  // namespace hal::xbee

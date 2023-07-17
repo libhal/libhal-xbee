@@ -43,15 +43,23 @@ hal::result<hardware_map> initialize_platform()
   static hal::cortex_m::dwt_counter counter(cpu_frequency);
 
   static std::array<hal::byte, 64> uart0_buffer{};
-  // Get and initialize UART0 for UART based logging
+  static std::array<hal::byte, 812> uart1_buffer{};
+
   static auto uart0 = HAL_CHECK(hal::lpc40::uart::get(0,
                                                       uart0_buffer,
                                                       hal::serial::settings{
                                                         .baud_rate = 115200,
                                                       }));
 
+    static auto uart1 = HAL_CHECK(hal::lpc40::uart::get(1,
+                                                      uart1_buffer,
+                                                      hal::serial::settings{
+                                                        .baud_rate = 9600,
+                                                      }));
+
   return hardware_map{
     .console = &uart0,
+    .xbee = &uart1,
     .clock = &counter,
     .reset = []() { hal::cortex_m::reset(); },
   };

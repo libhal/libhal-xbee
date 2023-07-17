@@ -23,7 +23,7 @@
 
 int main()
 {
-  hal::xbee::xbee_replace_me bar;
+  return 0;
 }
 
 namespace boost {

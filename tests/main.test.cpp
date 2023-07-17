@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace hal::__device__ {
-extern void __device___test();
-}  // namespace hal::__device__
+namespace hal::xbee {
+extern void xbee_test();
+}  // namespace hal::xbee
 
 int main()
 {
-  hal::__device__::__device___test();
+  hal::xbee::xbee_test();
 }

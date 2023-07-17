@@ -12,9 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#include <libhal-xbee/xbee.hpp>
 
-namespace hal::__device__ {
-class __device___replace_me
-{};
-}  // namespace hal::__device__
+#include <boost/ut.hpp>
+
+namespace hal::xbee {
+void xbee_test()
+{
+  using namespace boost::ut;
+  using namespace std::literals;
+
+  "xbee::create()"_test = []() {
+    // Setup
+    // Exercise
+    // Verify
+  };
+};
+}  // namespace hal::xbee

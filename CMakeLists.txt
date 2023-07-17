@@ -14,17 +14,17 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(libhal-__device__ VERSION 0.0.1 LANGUAGES CXX)
+project(libhal-xbee VERSION 0.0.1 LANGUAGES CXX)
 
 find_package(libhal REQUIRED CONFIG)
 find_package(libhal-util REQUIRED CONFIG)
 
-add_library(libhal-__device__ src/__device__.cpp)
+add_library(libhal-xbee src/xbee.cpp)
 
-target_include_directories(libhal-__device__ PUBLIC include)
-target_compile_features(libhal-__device__ PRIVATE cxx_std_20)
-target_compile_options(libhal-__device__ PRIVATE -Wall -Wextra)
-target_link_libraries(libhal-__device__ PRIVATE
+target_include_directories(libhal-xbee PUBLIC include)
+target_compile_features(libhal-xbee PRIVATE cxx_std_20)
+target_compile_options(libhal-xbee PRIVATE -Wall -Wextra)
+target_link_libraries(libhal-xbee PRIVATE
   libhal::libhal
   libhal::util
 )
@@ -33,4 +33,4 @@ if(NOT BUILD_TESTING STREQUAL OFF)
   add_subdirectory(tests)
 endif()
 
-install(TARGETS libhal-__device__)
+install(TARGETS libhal-xbee)

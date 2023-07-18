@@ -27,11 +27,9 @@ hal::result<std::span<hal::byte>> xbee_radio::read()
   return data_recieved;
 }
 
-hal::result<serial::write_t> xbee_radio::write(
-  std::span<const hal::byte> p_data)
+void xbee_radio::write(std::span<const hal::byte> p_data)
 {
-  HAL_CHECK(hal::write(*m_serial, p_data));
-  return hal::result<serial::write_t>{};
+  hal::write(*m_serial, p_data);
 }
 
 }  // namespace hal::xbee

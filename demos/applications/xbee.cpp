@@ -37,16 +37,16 @@ hal::status application(hardware_map& p_map)
   while (true) {
     hal::delay(clock, 1000ms);
     auto recieved_data = HAL_CHECK(xbee_module.read());
-    hal::print(console, "\n=================== RECIEVED DATA ===================\n");
+    hal::print(console,
+               "\n=================== RECIEVED DATA ===================\n");
     hal::print(console, recieved_data);
 
     std::string_view message = "Hello from the other side";
     xbee_module.write(hal::as_bytes(message));
-    hal::print(console, "\n=================== TRANSMITTED DATA ===================\n");
+    hal::print(console,
+               "\n=================== TRANSMITTED DATA ===================\n");
     hal::print(console, message);
-
   }
-
 
   return hal::success();
 }

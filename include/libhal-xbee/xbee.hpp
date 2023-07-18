@@ -29,7 +29,7 @@ public:
 
   hal::result<std::span<hal::byte>> read();
 
-  hal::result<serial::write_t> write(std::span<const hal::byte> p_data);
+  void write(std::span<const hal::byte> p_data);
 
 private:
   xbee_radio(hal::serial& p_serial);

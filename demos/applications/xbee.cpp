@@ -32,6 +32,9 @@ hal::status application(hardware_map& p_map)
   auto xbee_module = HAL_CHECK(hal::xbee::xbee_radio::create(xbee));
   hal::print(console, "XBEE Radio created! \n");
 
+  xbee_module.configure_xbee("C", "2015"); // Channel C, PANID 2015
+  hal::delay(clock, 500ms);
+
   hal::print(console, "Demo Application Starting...\n\n");
 
   while (true) {

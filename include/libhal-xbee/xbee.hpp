@@ -31,10 +31,19 @@ public:
 
   void write(std::span<const hal::byte> p_data);
 
+  void configure_xbee(const char* p_channel, const char* p_panid);
+
+
+
 private:
   xbee_radio(hal::serial& p_serial);
   hal::serial* m_serial;
   std::array<hal::byte, 256> m_xbee_buffer;
+
+  void write(const char* str);
+  void write_command(const char* command, const char* value);
 };
+
+
 
 }  // namespace hal::xbee

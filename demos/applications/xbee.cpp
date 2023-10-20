@@ -32,8 +32,33 @@ hal::status application(hardware_map& p_map)
   auto xbee_module = HAL_CHECK(hal::xbee::xbee_radio::create(xbee));
   hal::print(console, "XBEE Radio created! \n");
 
-  xbee_module.configure_xbee("C", "2015"); // Channel C, PANID 2015
+  // xbee_module.configure_xbee("C", "2015"); // Channel C, PANID 2015
+  // hal::delay(clock, 500ms);
+  std::array<hal::byte, 256> xbee_buffer;
   hal::delay(clock, 500ms);
+
+    HAL_CHECK(hal::write(xbee, "+++"));
+    hal::delay(clock, 100ms);
+    auto output = HAL_CHECK(xbee.read(xbee_buffer)).data;
+    hal::print(console, output);
+    hal::delay(clock, 1000ms);
+
+
+
+    // // Set channel
+    HAL_CHECK(hal::write(xbee, "ATCH C\r"));
+    hal::delay(clock, 100ms);
+    // Set PAN ID
+    HAL_CHECK(hal::write(xbee, "ATID 2023\r"));
+    hal::delay(clock, 100ms);
+    // Save configuration
+    HAL_CHECK(hal::write(xbee, "ATWR\r"));
+    hal::delay(clock, 100ms);
+    // Exit command mode
+    HAL_CHECK(hal::write(xbee, "ATCN\r"));
+    hal::delay(clock, 100ms);
+
+
 
   hal::print(console, "Demo Application Starting...\n\n");
 

@@ -29,10 +29,11 @@ hal::status application(hardware_map& p_map)
   auto& xbee = *p_map.xbee;
 
   hal::print(console, "Initializing XBEE Radio...\n");
-  auto xbee_module = HAL_CHECK(hal::xbee::xbee_radio::create(xbee));
+  auto xbee_module = HAL_CHECK(hal::xbee::xbee_radio::create(xbee, clock));
   hal::print(console, "XBEE Radio created! \n");
 
-  xbee_module.configure_xbee("C", "2015"); // Channel C, PANID 2015
+  HAL_CHECK(xbee_module.configure_xbee("C", "2015"));  // Channel C, PANID 2015
+  hal::print(console, "Configured XBEE Radio \n");
   hal::delay(clock, 500ms);
 
   hal::print(console, "Demo Application Starting...\n\n");

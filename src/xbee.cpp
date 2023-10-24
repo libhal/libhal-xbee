@@ -51,15 +51,44 @@ hal::status xbee_radio::configure_xbee(const char* p_channel,
   auto output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
   hal::delay(*m_clock, 1000ms);
 
-  if (output[0] != 'O' || output[1] != 'K') {
-    return hal::new_error();
-  }
+int retry_count = 0;
+const int max_retries = 5;  // Define a maximum number of retries
+
+while (retry_count < max_retries) {
+    // Try to enter command mode
+    HAL_CHECK(write("+++"));
+    hal::delay(*m_clock, 100ms);
+    output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
+    hal::delay(*m_clock, 1000ms);
+    
+    if (output[0] == 'O' && output[1] == 'K') {
+        hal::print(*m_serial, "Radio Success\r");
+        break;
+    } 
+    else if (output[0] == 'E' && output[1] == 'R' && output[2] == 'R') {
+        hal::print(*m_serial, "Error Occurred\r");
+        retry_count++;
+        hal::delay(*m_clock, 2000ms);  // Optional delay before retrying
+    } 
+    else {
+        return hal::new_error();
+    }
+}
+
+if (retry_count == max_retries) {
+    hal::print(*m_serial, "Failed to enter command mode after multiple attempts\r");
+    // Handle the failure here, perhaps by returning an error or taking other actions
+}
+
 
   // // Set channel
   HAL_CHECK(write_command("ATCH", p_channel));
   hal::delay(*m_clock, 100ms);
   // Set PAN ID
   HAL_CHECK(write_command("ATID", p_panid));
+  hal::delay(*m_clock, 100ms);
+  // // Set Baud Rate to 115200
+  HAL_CHECK(write("ATBD7"));
   hal::delay(*m_clock, 100ms);
   // Save configuration
   HAL_CHECK(write("ATWR\r"));

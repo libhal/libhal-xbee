@@ -1,4 +1,4 @@
-// Copyright 2023 Google LLC
+// Copyright 2024 Khalil Estell
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ hal::result<hardware_map> initialize_platform()
                                                         .baud_rate = 115200,
                                                       }));
 
-    static auto uart1 = HAL_CHECK(hal::lpc40::uart::get(1,
+  static auto uart1 = HAL_CHECK(hal::lpc40::uart::get(1,
                                                       uart1_buffer,
                                                       hal::serial::settings{
                                                         .baud_rate = 9600,

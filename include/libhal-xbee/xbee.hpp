@@ -33,9 +33,9 @@ public:
 
   hal::result<std::span<hal::byte>> read();
 
-  hal::status write(std::span<const hal::byte> p_data);
+  hal::status write(std::span<hal::byte const> p_data);
 
-  hal::status configure_xbee(const char* p_channel, const char* p_panid);
+  hal::status configure_xbee(char const* p_channel, char const* p_panid);
 
 private:
   xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock)
@@ -49,8 +49,8 @@ private:
 
   std::array<hal::byte, 256> m_xbee_buffer;
 
-  hal::status write(const char* str);
-  hal::status write_command(const char* command, const char* value);
+  hal::status write(char const* str);
+  hal::status write_command(char const* command, char const* value);
 };
 
 }  // namespace hal::xbee

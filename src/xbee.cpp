@@ -23,23 +23,23 @@ hal::result<std::span<hal::byte>> xbee_radio::read()
   return data_recieved;
 }
 
-hal::status xbee_radio::write(std::span<const hal::byte> p_data)
+hal::status xbee_radio::write(std::span<hal::byte const> p_data)
 {
   hal::write(*m_serial, p_data);
   return hal::success();
 }
 
-hal::status xbee_radio::write(const char* str)
+hal::status xbee_radio::write(char const* str)
 {
   auto length = strlen(str);
-  std::span<const hal::byte> span(reinterpret_cast<const hal::byte*>(str),
+  std::span<hal::byte const> span(reinterpret_cast<hal::byte const*>(str),
                                   length);
   write(span);
   return hal::success();
 }
 
-hal::status xbee_radio::configure_xbee(const char* p_channel,
-                                       const char* p_panid)
+hal::status xbee_radio::configure_xbee(char const* p_channel,
+                                       char const* p_panid)
 {
 
   using namespace std::chrono_literals;
@@ -51,35 +51,34 @@ hal::status xbee_radio::configure_xbee(const char* p_channel,
   auto output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
   hal::delay(*m_clock, 1000ms);
 
-int retry_count = 0;
-const int max_retries = 5;  // Define a maximum number of retries
+  int retry_count = 0;
+  int const max_retries = 5;  // Define a maximum number of retries
 
-while (retry_count < max_retries) {
+  while (retry_count < max_retries) {
     // Try to enter command mode
     HAL_CHECK(write("+++"));
     hal::delay(*m_clock, 100ms);
     output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
     hal::delay(*m_clock, 1000ms);
-    
+
     if (output[0] == 'O' && output[1] == 'K') {
-        hal::print(*m_serial, "Radio Success\r");
-        break;
-    } 
-    else if (output[0] == 'E' && output[1] == 'R' && output[2] == 'R') {
-        hal::print(*m_serial, "Error Occurred\r");
-        retry_count++;
-        hal::delay(*m_clock, 2000ms);  // Optional delay before retrying
-    } 
-    else {
-        return hal::new_error();
+      hal::print(*m_serial, "Radio Success\r");
+      break;
+    } else if (output[0] == 'E' && output[1] == 'R' && output[2] == 'R') {
+      hal::print(*m_serial, "Error Occurred\r");
+      retry_count++;
+      hal::delay(*m_clock, 2000ms);  // Optional delay before retrying
+    } else {
+      return hal::new_error();
     }
-}
+  }
 
-if (retry_count == max_retries) {
-    hal::print(*m_serial, "Failed to enter command mode after multiple attempts\r");
-    // Handle the failure here, perhaps by returning an error or taking other actions
-}
-
+  if (retry_count == max_retries) {
+    hal::print(*m_serial,
+               "Failed to enter command mode after multiple attempts\r");
+    // Handle the failure here, perhaps by returning an error or taking other
+    // actions
+  }
 
   // // Set channel
   HAL_CHECK(write_command("ATCH", p_channel));
@@ -99,7 +98,7 @@ if (retry_count == max_retries) {
   return hal::success();
 }
 
-hal::status xbee_radio::write_command(const char* command, const char* value)
+hal::status xbee_radio::write_command(char const* command, char const* value)
 {
   write(command);
   write(value);

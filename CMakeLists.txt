@@ -11,26 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+cmake_minimum_required(VERSION 3.25)
 
-cmake_minimum_required(VERSION 3.15)
+project(libhal-xbee LANGUAGES CXX)
 
-project(libhal-xbee VERSION 0.0.1 LANGUAGES CXX)
+libhal_test_and_make_library(
+  LIBRARY_NAME libhal-xbee
 
-find_package(libhal REQUIRED CONFIG)
-find_package(libhal-util REQUIRED CONFIG)
+  SOURCES
+  src/xbee.cpp
 
-add_library(libhal-xbee src/xbee.cpp)
-
-target_include_directories(libhal-xbee PUBLIC include)
-target_compile_features(libhal-xbee PRIVATE cxx_std_20)
-target_compile_options(libhal-xbee PRIVATE -Wall -Wextra)
-target_link_libraries(libhal-xbee PRIVATE
-  libhal::libhal
-  libhal::util
+  TEST_SOURCES
+  tests/xbee.test.cpp
+  tests/main.test.cpp
 )
-
-if(NOT BUILD_TESTING STREQUAL OFF)
-  add_subdirectory(tests)
-endif()
-
-install(TARGETS libhal-xbee)

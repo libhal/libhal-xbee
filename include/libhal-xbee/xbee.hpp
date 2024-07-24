@@ -15,42 +15,31 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
-#include <string_view>
 
 #include <libhal-util/steady_clock.hpp>
 #include <libhal/functional.hpp>
 #include <libhal/serial.hpp>
 #include <libhal/steady_clock.hpp>
-#
 
 namespace hal::xbee {
 class xbee_radio
 {
 public:
-  [[nodiscard]] static result<xbee_radio> create(hal::serial& p_serial,
-                                                 hal::steady_clock& p_clock);
+  /**
+   * @brief Construct a new xbee radio object
+   *
+   * @param p_serial - serial port connected to xbee radio device
+   * @param p_clock - clock used for timing configuring the xbee
+   */
+  xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock);
 
-  hal::result<std::span<hal::byte>> read();
-
-  hal::status write(std::span<hal::byte const> p_data);
-
-  hal::status configure_xbee(char const* p_channel, char const* p_panid);
+  std::span<hal::byte> read(std::span<hal::byte> p_buffer);
+  void write(std::span<const hal::byte> p_data);
+  void configure(std::string_view p_channel, std::string_view p_panid);
 
 private:
-  xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock)
-    : m_serial(&p_serial)
-    , m_clock(&p_clock)
-  {
-  }
-
   hal::serial* m_serial;
   hal::steady_clock* m_clock;
-
-  std::array<hal::byte, 256> m_xbee_buffer;
-
-  hal::status write(char const* str);
-  hal::status write_command(char const* command, char const* value);
 };
 
 }  // namespace hal::xbee

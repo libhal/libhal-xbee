@@ -1,7 +1,6 @@
 #include "libhal-xbee/xbee.hpp"
 
-#include <algorithm>
-#include <array>
+#include <libhal/timeout.hpp>
 #include <span>
 
 #include <libhal-util/serial.hpp>
@@ -10,55 +9,44 @@
 
 namespace hal::xbee {
 
-result<xbee_radio> xbee_radio::create(hal::serial& p_serial,
-                                      hal::steady_clock& p_clock)
+xbee_radio::xbee_radio(hal::serial& p_serial, hal::steady_clock& p_clock)
+  : m_serial(&p_serial)
+  , m_clock(&p_clock)
 {
-  xbee_radio new_xbee(p_serial, p_clock);
-  return new_xbee;
 }
 
-hal::result<std::span<hal::byte>> xbee_radio::read()
+std::span<hal::byte> xbee_radio::read(std::span<hal::byte> p_buffer)
 {
-  auto data_recieved = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
-  return data_recieved;
+  return m_serial->read(p_buffer).data;
 }
 
-hal::status xbee_radio::write(std::span<hal::byte const> p_data)
+void xbee_radio::write(std::span<const hal::byte> p_data)
 {
-  hal::write(*m_serial, p_data);
-  return hal::success();
+  m_serial->write(p_data);
 }
 
-hal::status xbee_radio::write(char const* str)
-{
-  auto length = strlen(str);
-  std::span<hal::byte const> span(reinterpret_cast<hal::byte const*>(str),
-                                  length);
-  write(span);
-  return hal::success();
-}
-
-hal::status xbee_radio::configure_xbee(char const* p_channel,
-                                       char const* p_panid)
+void xbee_radio::configure(std::string_view p_channel, std::string_view p_panid)
 {
 
   using namespace std::chrono_literals;
   using namespace hal::literals;
 
+  std::array<hal::byte, 32> buffer{};
+
   hal::delay(*m_clock, 500ms);
-  HAL_CHECK(write("+++"));
+  hal::write(*m_serial, "+++", hal::never_timeout());
   hal::delay(*m_clock, 100ms);
-  auto output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
+  auto output = m_serial->read(buffer).data;
   hal::delay(*m_clock, 1000ms);
 
   int retry_count = 0;
-  int const max_retries = 5;  // Define a maximum number of retries
+  const int max_retries = 5;  // Define a maximum number of retries
 
   while (retry_count < max_retries) {
     // Try to enter command mode
-    HAL_CHECK(write("+++"));
+    hal::write(*m_serial, "+++", hal::never_timeout());
     hal::delay(*m_clock, 100ms);
-    output = HAL_CHECK(m_serial->read(m_xbee_buffer)).data;
+    output = (m_serial->read(buffer)).data;
     hal::delay(*m_clock, 1000ms);
 
     if (output[0] == 'O' && output[1] == 'K') {
@@ -69,6 +57,7 @@ hal::status xbee_radio::configure_xbee(char const* p_channel,
       retry_count++;
       hal::delay(*m_clock, 2000ms);  // Optional delay before retrying
     } else {
+      // TODO: determine what should go here.
       return hal::new_error();
     }
   }
@@ -80,30 +69,31 @@ hal::status xbee_radio::configure_xbee(char const* p_channel,
     // actions
   }
 
-  // // Set channel
-  HAL_CHECK(write_command("ATCH", p_channel));
+  auto write_command = [this](std::string_view command,
+                              std::string_view value) {
+    hal::write(*m_serial, command, hal::never_timeout());
+    hal::write(*m_serial, value, hal::never_timeout());
+    hal::write(*m_serial, "\r", hal::never_timeout());
+  };
+
+  // Set channel
+  write_command("ATCH", p_channel);
   hal::delay(*m_clock, 100ms);
+
   // Set PAN ID
-  HAL_CHECK(write_command("ATID", p_panid));
+  write_command("ATID", p_panid);
   hal::delay(*m_clock, 100ms);
-  // // Set Baud Rate to 115200
-  HAL_CHECK(write("ATBD7"));
+
+  // Set Baud Rate to 115200
+  hal::write(*m_serial, "ATBD7", hal::never_timeout());
   hal::delay(*m_clock, 100ms);
+
   // Save configuration
-  HAL_CHECK(write("ATWR\r"));
+  hal::write(*m_serial, "ATWR\r", hal::never_timeout());
   hal::delay(*m_clock, 100ms);
+
   // Exit command mode
-  HAL_CHECK(write("ATCN\r"));
+  hal::write(*m_serial, "ATCN\r", hal::never_timeout());
   hal::delay(*m_clock, 100ms);
-  return hal::success();
 }
-
-hal::status xbee_radio::write_command(char const* command, char const* value)
-{
-  write(command);
-  write(value);
-  write("\r");
-  return hal::success();
-}
-
 }  // namespace hal::xbee
